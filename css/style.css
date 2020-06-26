@@ -32,10 +32,9 @@ body{
     box-shadow: 3px 3px 3px #FFDDE8!important;
 }
 
-.icon-font {
-  color: #000000;
-  font-size: 24px;
-
+.col.icon-font {
+	color: #000;
+	font-size: 24px;
 }
 
 .sitebuttons {
