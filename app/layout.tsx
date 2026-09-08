@@ -73,6 +73,7 @@ const jsonLd = {
   address: { "@type": "PostalAddress", addressLocality: "Phoenix", addressRegion: "AZ", addressCountry: "US" },
   sameAs: [profile.linkedin, profile.github],
   alumniOf: { "@type": "CollegeOrUniversity", name: "Washington State University" },
+  worksFor: { "@type": "Organization", name: "Thryv Inc." },
   knowsAbout: [
     "LLM agent orchestration", "Model Context Protocol", "Retrieval-Augmented Generation",
     "Front-end architecture", "React", "Vue 3", "TypeScript", "Python", "Kubernetes",

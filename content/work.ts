@@ -15,7 +15,7 @@ export const work: Project[] = [
     blurb:
       "A multi-tenant Python API where internal product teams register, configure and run their own LLM agents — replacing the per-team one-off integrations that came before it across a CRM and marketing-automation platform serving 15,000+ small businesses.",
     stack: "Python · Multi-tenant API · LLM providers",
-    at: "Current role",
+    at: "Thryv",
   },
   {
     id: "mcp-servers",
@@ -24,7 +24,7 @@ export const work: Project[] = [
     blurb:
       "Model Context Protocol servers giving agents governed access to product data and internal APIs. Cut the effort to add a new AI integration from weeks to days.",
     stack: "MCP · Python · Internal APIs",
-    at: "Current role",
+    at: "Thryv",
   },
   {
     id: "memory-rag",
@@ -33,7 +33,7 @@ export const work: Project[] = [
     blurb:
       "A retrieval pipeline on a vector database that grounds agent responses in company data — embeddings, retrieval and conversation memory, so answers cite the business rather than the model's priors.",
     stack: "Vector DB · Embeddings · RAG",
-    at: "Current role",
+    at: "Thryv",
   },
   {
     id: "ai-chat",
@@ -42,7 +42,7 @@ export const work: Project[] = [
     blurb:
       "The end-to-end chat experience: streaming responses, conversation state, retry and fallback handling — built in Vue 3 and React against the orchestration service.",
     stack: "Vue 3 · React · Streaming",
-    at: "Current role",
+    at: "Thryv",
   },
   {
     id: "frontend-platform",
@@ -51,7 +51,7 @@ export const work: Project[] = [
     blurb:
       "Platform-wide front-end architecture — a shared Vue and React component library plus the Webpack-to-Vite migration. Cut CI build times ~30% and removed ~40% of duplicated UI code.",
     stack: "Vite · Vue 3 · React · Design system",
-    at: "Current role",
+    at: "Thryv",
   },
   {
     id: "eligibility",
@@ -82,7 +82,7 @@ export const work: Project[] = [
   },
 ];
 
-/* Architecture of the agent orchestration platform built in the current role. */
+/* Architecture of the agent orchestration platform built at Thryv. */
 export type NodeSpec = {
   id: string; x: number; y: number; w: number; h: number;
   title: string; kind: string; detail: string; points: string[];

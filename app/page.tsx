@@ -74,7 +74,7 @@ export default function Home() {
             The agents I<br /><span className="acc">actually shipped</span>
           </Chapter>
           <Reveal as="p" className="lede">
-            The agent orchestration platform I architected in my current role — a multi-tenant service where
+            The agent orchestration platform I architected at Thryv — a multi-tenant service where
             product teams register and run their own LLM agents. <em>Hover any node</em> to see what
             it does.
           </Reveal>

@@ -14,8 +14,8 @@ export const experience: Role[] = [
     period: "Apr 2023 — Present",
     start: "2023",
     title: "Senior Software Engineer (Tech Lead)",
-    company: "SaaS CRM & Marketing Automation Platform",
-    note: "company named on request",
+    company: "Thryv Inc.",
+    note: "Keap, acquired by Thryv",
     location: "Phoenix, AZ",
     bullets: [
       "Architected and shipped a Python agent orchestration service — a multi-tenant API where internal product teams register, configure and run their own LLM agents — replacing per-team one-off integrations across a CRM and marketing-automation platform serving 15,000+ small businesses.",

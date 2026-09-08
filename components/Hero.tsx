@@ -62,7 +62,7 @@ export function Hero() {
             >
               <div className="h-role">
                 <strong>{profile.role}</strong>
-                <span className="at">building agent platforms in SaaS</span>
+                <span className="at">currently at Thryv</span>
               </div>
 
               <p className="h-copy">
@@ -95,7 +95,7 @@ export function Hero() {
               <span className="live"><i />Live</span>
             </div>
             <AgentGraph />
-            <div className="gp-foot">Hub-and-spoke runtime · shipped in production</div>
+            <div className="gp-foot">Hub-and-spoke runtime · shipped at Thryv</div>
           </motion.div>
         </div>
       </div>
