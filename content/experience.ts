@@ -87,7 +87,7 @@ export const education = [
     year: "May 2020",
   },
   {
-    school: "",
+    school: "Bhilai Institute of Technology, Raipur",
     degree: "B.Tech, Electronics & Telecommunication",
     year: "June 2016",
   },
