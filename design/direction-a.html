@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction A — Orchestrator · Aman Saini</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07080a; --bg-2:#0b0d11; --panel:#0e1116; --panel-2:#12161c;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.05);
+  --tx:#e9edf2; --tx-2:#98a2b0; --tx-3:#5d6672;
+  --ac:#5BFFA5; --ac-2:#6EE7FF; --ac-dim:rgba(91,255,165,.14);
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --disp:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --max:1240px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--tx); font-family:var(--disp);
+  -webkit-font-smoothing:antialiased; overflow-x:hidden; line-height:1.55;
+}
+body::before{
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:linear-gradient(var(--line-2) 1px,transparent 1px),linear-gradient(90deg,var(--line-2) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 90% 60% at 50% 30%,#000 20%,transparent 78%);
+}
+body::after{
+  content:''; position:fixed; inset:0; z-index:9998; pointer-events:none; opacity:.028;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+::selection{background:var(--ac);color:#04150c}
+a{color:inherit;text-decoration:none}
+
+/* ---------- shared atoms ---------- */
+.wrap{max-width:var(--max);margin:0 auto;padding:0 32px;position:relative;z-index:2}
+.eyebrow{
+  font-family:var(--mono); font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--ac); display:flex; align-items:center; gap:10px; margin-bottom:26px;
+}
+.eyebrow::before{content:'';width:26px;height:1px;background:var(--ac);opacity:.6}
+.sec-h{font-size:clamp(30px,4.4vw,56px);font-weight:600;letter-spacing:-.03em;line-height:1.06}
+.sec-sub{color:var(--tx-2);max-width:52ch;margin-top:18px;font-size:16.5px}
+section{position:relative;z-index:2;padding:132px 0}
+.mono{font-family:var(--mono)}
+
+/* reveal */
+[data-rv]{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+[data-rv].in{opacity:1;transform:none}
+
+/* ---------- cursor ---------- */
+.cur,.cur-d{position:fixed;top:0;left:0;z-index:9999;pointer-events:none;border-radius:50%;mix-blend-mode:difference}
+.cur{width:34px;height:34px;border:1px solid rgba(255,255,255,.7);margin:-17px 0 0 -17px;transition:width .25s,height .25s,margin .25s,background .25s}
+.cur.on{width:64px;height:64px;margin:-32px 0 0 -32px;background:rgba(255,255,255,.12)}
+.cur-d{width:4px;height:4px;background:#fff;margin:-2px 0 0 -2px}
+@media(hover:none){.cur,.cur-d{display:none}}
+
+/* ---------- progress ---------- */
+.prog{position:fixed;top:0;left:0;height:2px;width:100%;z-index:9997;transform-origin:0 50%;transform:scaleX(0);
+  background:linear-gradient(90deg,var(--ac),var(--ac-2))}
+
+/* ---------- nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:9000;backdrop-filter:blur(14px);
+  background:rgba(7,8,10,.55);border-bottom:1px solid transparent;transition:border-color .4s,background .4s}
+nav.stuck{border-color:var(--line);background:rgba(7,8,10,.82)}
+.nav-in{max-width:var(--max);margin:0 auto;padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;font-weight:600;letter-spacing:-.02em}
+.brand i{width:9px;height:9px;border-radius:50%;background:var(--ac);box-shadow:0 0 14px var(--ac);animation:bp 2.6s ease-in-out infinite}
+@keyframes bp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+.nav-links{display:flex;gap:34px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--tx-2)}
+.nav-links a{position:relative;padding:4px 0;transition:color .3s}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--ac);transition:width .35s cubic-bezier(.16,1,.3,1)}
+.nav-links a:hover{color:var(--tx)}.nav-links a:hover::after{width:100%}
+.nav-cta{font-family:var(--mono);font-size:12px;border:1px solid var(--line);padding:9px 18px;border-radius:999px;transition:.35s}
+.nav-cta:hover{border-color:var(--ac);color:var(--ac);box-shadow:0 0 22px var(--ac-dim)}
+@media(max-width:880px){.nav-links{display:none}}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:flex;align-items:center;padding:120px 0 80px;overflow:hidden}
+#graph{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.hero .wrap{z-index:3}
+.hero-grid{display:grid;grid-template-columns:1fr auto;gap:60px;align-items:end}
+.h-status{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;
+  color:var(--tx-2);border:1px solid var(--line);border-radius:999px;padding:7px 15px;background:rgba(14,17,22,.7);backdrop-filter:blur(6px)}
+.h-status b{width:6px;height:6px;border-radius:50%;background:var(--ac);box-shadow:0 0 10px var(--ac)}
+h1{font-size:clamp(48px,8.4vw,116px);font-weight:600;letter-spacing:-.045em;line-height:.93;margin:28px 0 0}
+h1 .ln{display:block;overflow:hidden}
+h1 .ln>span{display:block;transform:translateY(105%);animation:up 1.05s cubic-bezier(.16,1,.3,1) forwards}
+h1 .ln:nth-child(2)>span{animation-delay:.11s}
+@keyframes up{to{transform:none}}
+.h-out{-webkit-text-stroke:1.2px var(--tx);color:transparent}
+.roles{display:flex;flex-wrap:wrap;gap:8px;margin-top:34px}
+.role{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx-2);
+  border:1px solid var(--line);border-radius:999px;padding:7px 14px;background:rgba(14,17,22,.6);
+  opacity:0;transform:translateY(12px);animation:up2 .7s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes up2{to{opacity:1;transform:none}}
+.h-copy{color:var(--tx-2);max-width:46ch;margin-top:30px;font-size:17px}
+.h-copy em{color:var(--ac);font-style:normal}
+.h-btns{display:flex;gap:14px;margin-top:40px;flex-wrap:wrap}
+.btn{position:relative;display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12.5px;
+  letter-spacing:.08em;padding:15px 26px;border-radius:999px;border:1px solid var(--line);overflow:hidden;transition:.35s;background:rgba(14,17,22,.6)}
+.btn span{position:relative;z-index:2}
+.btn.pri{background:var(--ac);color:#04150c;border-color:var(--ac);font-weight:700}
+.btn.pri:hover{box-shadow:0 0 42px var(--ac-dim);transform:translateY(-2px)}
+.btn.sec:hover{border-color:var(--ac);color:var(--ac)}
+.h-side{font-family:var(--mono);font-size:11.5px;color:var(--tx-3);text-align:right;line-height:2}
+.h-side b{color:var(--ac);font-weight:400}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr}.h-side{display:none}}
+.scroll-hint{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.24em;color:var(--tx-3);z-index:3;display:flex;flex-direction:column;align-items:center;gap:12px}
+.scroll-hint i{width:1px;height:44px;background:linear-gradient(var(--ac),transparent);animation:sd 2s ease-in-out infinite}
+@keyframes sd{0%,100%{opacity:.25;transform:scaleY(.5)}50%{opacity:1;transform:scaleY(1)}}
+
+/* ---------- marquee ---------- */
+.mq{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:26px 0;overflow:hidden;
+  background:linear-gradient(180deg,rgba(91,255,165,.03),transparent)}
+.mq-t{display:flex;gap:56px;white-space:nowrap;animation:mq 34s linear infinite;width:max-content}
+.mq-t span{font-family:var(--mono);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx-3);
+  display:flex;align-items:center;gap:56px}
+.mq-t span::after{content:'◆';color:var(--ac);font-size:8px}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel)}
+.stat{padding:38px 30px;border-right:1px solid var(--line);position:relative;overflow:hidden}
+.stat:last-child{border-right:0}
+.stat::after{content:'';position:absolute;inset:auto 0 0 0;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:0;transition:transform .7s cubic-bezier(.16,1,.3,1)}
+.stat:hover::after{transform:scaleX(1)}
+.stat h3{font-size:clamp(32px,3.6vw,50px);font-weight:600;letter-spacing:-.035em;line-height:1}
+.stat p{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx-3);margin-top:12px}
+@media(max-width:820px){.stats{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.stat:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+
+/* ---------- about ---------- */
+.about{display:grid;grid-template-columns:.9fr 1.1fr;gap:80px;align-items:start}
+.about p{color:var(--tx-2);font-size:17.5px;margin-bottom:22px}
+.about p strong{color:var(--tx);font-weight:500}
+.about-side{border-left:1px solid var(--line);padding-left:30px}
+.kv{display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid var(--line-2);font-family:var(--mono);font-size:12.5px}
+.kv b{color:var(--tx-3);font-weight:400;letter-spacing:.06em;text-transform:uppercase;font-size:10.5px}
+.kv i{font-style:normal;color:var(--tx)}
+@media(max-width:900px){.about{grid-template-columns:1fr;gap:44px}.about-side{border-left:0;padding-left:0}}
+
+/* ---------- orchestration ---------- */
+.orch{background:linear-gradient(180deg,transparent,rgba(91,255,165,.025),transparent)}
+.orch-stage{margin-top:60px;border:1px solid var(--line);border-radius:20px;background:
+  radial-gradient(120% 100% at 50% 0%,rgba(91,255,165,.06),transparent 60%),var(--panel);overflow:hidden}
+.orch-bar{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--tx-3);letter-spacing:.1em}
+.dot{width:9px;height:9px;border-radius:50%;background:#2a2f38}
+.dot.g{background:var(--ac);box-shadow:0 0 10px var(--ac)}
+.orch-body{display:grid;grid-template-columns:1fr 300px}
+.orch-svg{padding:34px 24px}
+.orch-svg svg{width:100%;height:auto;display:block}
+.n-box{cursor:pointer}
+.n-rect{fill:var(--panel-2);stroke:var(--line);stroke-width:1;transition:.35s}
+.n-box:hover .n-rect,.n-box.act .n-rect{stroke:var(--ac);fill:rgba(91,255,165,.07)}
+.n-t{fill:var(--tx);font-family:var(--mono);font-size:11px;letter-spacing:.06em}
+.n-s{fill:var(--tx-3);font-family:var(--mono);font-size:8.5px;letter-spacing:.1em}
+.ed{stroke:rgba(255,255,255,.16);stroke-width:1;fill:none}
+.ed-f{stroke:var(--ac);stroke-width:1.4;fill:none;stroke-dasharray:5 210;filter:drop-shadow(0 0 5px var(--ac));animation:flow 3.4s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-215}}
+.orch-info{border-left:1px solid var(--line);padding:26px 24px;background:rgba(0,0,0,.24)}
+.orch-info h4{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);margin-bottom:14px}
+.orch-info p{color:var(--tx-2);font-size:14px;margin-bottom:18px;min-height:84px}
+.orch-info ul{list-style:none;font-family:var(--mono);font-size:11.5px;color:var(--tx-3)}
+.orch-info li{padding:9px 0;border-top:1px solid var(--line-2);display:flex;gap:9px}
+.orch-info li::before{content:'▸';color:var(--ac)}
+@media(max-width:940px){.orch-body{grid-template-columns:1fr}.orch-info{border-left:0;border-top:1px solid var(--line)}}
+.log{font-family:var(--mono);font-size:11px;color:var(--tx-3);border-top:1px solid var(--line);padding:14px 20px;height:96px;overflow:hidden}
+.log div{padding:2px 0;opacity:0;animation:lg .5s forwards}
+.log b{color:var(--ac);font-weight:400}
+.log u{color:var(--ac-2);text-decoration:none}
+@keyframes lg{to{opacity:1}}
+
+/* ---------- timeline ---------- */
+.tl{position:relative;margin-top:70px;padding-left:34px}
+.tl-rail{position:absolute;left:0;top:6px;bottom:6px;width:1px;background:var(--line)}
+.tl-fill{position:absolute;left:0;top:6px;width:1px;background:linear-gradient(var(--ac),var(--ac-2));transform-origin:top;height:0;box-shadow:0 0 12px var(--ac)}
+.tl-i{position:relative;padding:0 0 54px 0}
+.tl-i::before{content:'';position:absolute;left:-38px;top:9px;width:9px;height:9px;border-radius:50%;background:var(--bg);border:1px solid var(--tx-3);transition:.4s}
+.tl-i.in::before{background:var(--ac);border-color:var(--ac);box-shadow:0 0 16px var(--ac)}
+.tl-top{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.tl-yr{font-family:var(--mono);font-size:11.5px;color:var(--ac);letter-spacing:.1em}
+.tl-i h3{font-size:22px;font-weight:600;letter-spacing:-.02em}
+.tl-co{font-family:var(--mono);font-size:12px;color:var(--tx-3)}
+.tl-i p{color:var(--tx-2);margin-top:12px;max-width:66ch;font-size:15.5px}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}
+.tag{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);
+  border:1px solid var(--line);border-radius:4px;padding:5px 9px}
+
+/* ---------- work ---------- */
+.work-g{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:60px}
+.card{position:relative;border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:32px;overflow:hidden;
+  transition:transform .5s cubic-bezier(.16,1,.3,1),border-color .4s;min-height:250px;display:flex;flex-direction:column;justify-content:space-between}
+.card::before{content:'';position:absolute;width:400px;height:400px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(91,255,165,.13),transparent 66%);opacity:0;transition:opacity .45s;
+  left:var(--mx,50%);top:var(--my,50%);transform:translate(-50%,-50%)}
+.card:hover{transform:translateY(-6px);border-color:rgba(91,255,165,.4)}
+.card:hover::before{opacity:1}
+.card-n{font-family:var(--mono);font-size:10.5px;color:var(--tx-3);letter-spacing:.16em}
+.card h3{font-size:25px;font-weight:600;letter-spacing:-.025em;margin:18px 0 12px;position:relative}
+.card p{color:var(--tx-2);font-size:15px;position:relative;max-width:44ch}
+.card-f{display:flex;justify-content:space-between;align-items:center;margin-top:26px;position:relative}
+.card-ar{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;transition:.4s;color:var(--tx-2)}
+.card:hover .card-ar{background:var(--ac);color:#04150c;border-color:var(--ac);transform:rotate(-45deg)}
+@media(max-width:820px){.work-g{grid-template-columns:1fr}}
+
+/* ---------- stack ---------- */
+.stk{display:flex;flex-wrap:wrap;gap:10px;margin-top:44px}
+.stk span{font-family:var(--mono);font-size:12px;color:var(--tx-2);border:1px solid var(--line);border-radius:999px;
+  padding:10px 17px;transition:.35s;background:var(--panel)}
+.stk span:hover{border-color:var(--ac);color:var(--ac);transform:translateY(-3px)}
+
+/* ---------- contact ---------- */
+.cta{text-align:center;padding:150px 0}
+.cta h2{font-size:clamp(40px,8vw,104px);font-weight:600;letter-spacing:-.045em;line-height:.98}
+.cta h2 em{font-style:normal;-webkit-text-stroke:1.2px var(--ac);color:transparent}
+.cta-b{display:flex;gap:14px;justify-content:center;margin-top:46px;flex-wrap:wrap}
+footer{border-top:1px solid var(--line);padding:30px 0;font-family:var(--mono);font-size:11.5px;color:var(--tx-3)}
+.f-in{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.f-in a:hover{color:var(--ac)}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  [data-rv]{opacity:1;transform:none}
+  h1 .ln>span{transform:none}.role{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<div class="prog" id="prog"></div>
+<div class="cur" id="cur"></div><div class="cur-d" id="curd"></div>
+
+<nav id="nav"><div class="nav-in">
+  <a class="brand" href="#top"><i></i>AMAN SAINI</a>
+  <div class="nav-links">
+    <a href="#about">01 / About</a><a href="#orch">02 / Orchestration</a>
+    <a href="#exp">03 / Experience</a><a href="#work">04 / Work</a>
+  </div>
+  <a class="nav-cta mag" href="#contact">Let's talk</a>
+</div></nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <canvas id="graph"></canvas>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="h-status"><b></b>AVAILABLE FOR ADVISORY &amp; STAFF+ ROLES</div>
+        <h1>
+          <span class="ln"><span>I orchestrate</span></span>
+          <span class="ln"><span class="h-out">intelligent agents.</span></span>
+        </h1>
+        <div class="roles">
+          <div class="role" style="animation-delay:.55s">Tech Lead</div>
+          <div class="role" style="animation-delay:.63s">Co-Founder</div>
+          <div class="role" style="animation-delay:.71s">Staff Software Engineer</div>
+          <div class="role" style="animation-delay:.79s">Senior AI Engineer</div>
+        </div>
+        <p class="h-copy">Ten-plus years turning research-grade AI into systems that survive production. I design <em>multi-agent architectures</em> — planners, workers, critics, tool layers — and the platforms that keep them observable, evaluable and cheap.</p>
+        <div class="h-btns">
+          <a href="#work" class="btn pri mag"><span>See selected work</span><span>↗</span></a>
+          <a href="#contact" class="btn sec mag"><span>Download résumé</span></a>
+        </div>
+      </div>
+      <div class="h-side">
+        LAT 47.6062° N<br>LON 122.3321° W<br>
+        <b>10+</b> YEARS<br><b>4</b> ROLES<br><b>1</b> VENTURE
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint"><i></i>SCROLL</div>
+</header>
+
+<div class="mq"><div class="mq-t" id="mqt"></div></div>
+
+<!-- STATS -->
+<section style="padding-top:110px;padding-bottom:0"><div class="wrap">
+  <div class="stats" data-rv>
+    <div class="stat"><h3 data-count="10" data-suffix="+">0</h3><p>Years in production</p></div>
+    <div class="stat"><h3 data-count="1">0</h3><p>Company co-founded</p></div>
+    <div class="stat"><h3 data-count="30" data-suffix="+">0</h3><p>Engineers led &amp; mentored</p></div>
+    <div class="stat"><h3 data-count="12" data-suffix="M+">0</h3><p>Agent calls orchestrated / day</p></div>
+  </div>
+</div></section>
+
+<!-- ABOUT -->
+<section id="about"><div class="wrap">
+  <div class="eyebrow">01 — Who I am</div>
+  <div class="about">
+    <div data-rv>
+      <h2 class="sec-h">Engineer first.<br>Architect by necessity.<br>Founder by choice.</h2>
+    </div>
+    <div data-rv style="transition-delay:.12s">
+      <p><strong>I've spent a decade at the seam between infrastructure and intelligence.</strong> Started on backend platforms, moved into ML systems when models stopped being a research artifact, and now spend my days on the hardest version of that problem: getting many agents to cooperate reliably, under budget, at latency people will tolerate.</p>
+      <p>As a Staff engineer I'm the person teams call when a system is technically correct and still failing. As a Tech Lead I care more about the six other engineers shipping well than about my own diff. As a Co-Founder I learned that architecture is a business decision wearing a lab coat.</p>
+      <p>Right now I build agent orchestration runtimes — planning loops, tool routing, evaluation harnesses, memory — and I advise teams trying to get their first agent system past the demo.</p>
+      <div class="about-side" style="margin-top:34px">
+        <div class="kv"><b>Based</b><i>Seattle, WA · Remote-first</i></div>
+        <div class="kv"><b>Focus</b><i>Agent orchestration · LLM platforms</i></div>
+        <div class="kv"><b>Open to</b><i>Staff+ · Advisory · Fractional CTO</i></div>
+        <div class="kv"><b>Response</b><i>Usually within 24h</i></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ORCHESTRATION -->
+<section id="orch" class="orch"><div class="wrap">
+  <div class="eyebrow">02 — The signature system</div>
+  <h2 class="sec-h" data-rv>How I build agents that<br>don't fall over.</h2>
+  <p class="sec-sub" data-rv>A reference architecture I've shipped variants of three times. Click any node to see what it actually does.</p>
+
+  <div class="orch-stage" data-rv>
+    <div class="orch-bar"><span class="dot g"></span><span class="dot"></span><span class="dot"></span>
+      <span style="margin-left:12px">orchestrator-runtime · v4.2 · <span style="color:var(--ac)">healthy</span></span></div>
+    <div class="orch-body">
+      <div class="orch-svg">
+        <svg viewBox="0 0 760 380" id="osvg">
+          <g class="ed-wrap"></g>
+          <g id="onodes"></g>
+        </svg>
+      </div>
+      <aside class="orch-info">
+        <h4 id="oi-t">Planner</h4>
+        <p id="oi-p">Decomposes an ambiguous request into a typed DAG of sub-tasks, picks the cheapest model per node, and re-plans when the critic rejects a branch.</p>
+        <ul id="oi-l"></ul>
+      </aside>
+    </div>
+    <div class="log" id="log"></div>
+  </div>
+</div></section>
+
+<!-- EXPERIENCE -->
+<section id="exp"><div class="wrap">
+  <div class="eyebrow">03 — Ten years, abbreviated</div>
+  <h2 class="sec-h" data-rv>The path here.</h2>
+  <div class="tl" id="tl">
+    <div class="tl-rail"></div><div class="tl-fill" id="tlf"></div>
+  </div>
+</div></section>
+
+<!-- WORK -->
+<section id="work"><div class="wrap">
+  <div class="eyebrow">04 — Selected work</div>
+  <h2 class="sec-h" data-rv>Systems I'd show you<br>the source of.</h2>
+  <div class="work-g" id="workg"></div>
+  <div class="eyebrow" style="margin-top:90px">05 — Tooling</div>
+  <div class="stk" data-rv id="stk"></div>
+</div></section>
+
+<!-- CONTACT -->
+<section id="contact" class="cta"><div class="wrap">
+  <div class="eyebrow" style="justify-content:center">06 — Contact</div>
+  <h2 data-rv>Building something<br><em>hard?</em></h2>
+  <p class="sec-sub" style="margin:26px auto 0;text-align:center" data-rv>Advisory engagements, staff+ roles, or a second opinion on an agent architecture that isn't behaving. All welcome.</p>
+  <div class="cta-b" data-rv>
+    <a href="mailto:amandeepsingh.saini@hotmail.com" class="btn pri mag"><span>Start a conversation</span><span>↗</span></a>
+    <a href="#" class="btn sec mag"><span>LinkedIn</span></a>
+    <a href="#" class="btn sec mag"><span>GitHub</span></a>
+  </div>
+</div></section>
+
+<footer><div class="wrap f-in">
+  <span>© 2026 Amandeep Singh Saini</span>
+  <span>DIRECTION A — “ORCHESTRATOR”</span>
+  <span><a href="#top">Back to top ↑</a></span>
+</div></footer>
+
+<script>
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- cursor ---------- */
+(()=>{
+  const c=document.getElementById('cur'),d=document.getElementById('curd');
+  let x=innerWidth/2,y=innerHeight/2,cx=x,cy=y;
+  addEventListener('mousemove',e=>{x=e.clientX;y=e.clientY;d.style.transform=`translate(${x}px,${y}px)`;});
+  (function loop(){cx+=(x-cx)*.16;cy+=(y-cy)*.16;c.style.transform=`translate(${cx}px,${cy}px)`;requestAnimationFrame(loop)})();
+  document.querySelectorAll('a,button,.card,.n-box,.stat').forEach(el=>{
+    el.addEventListener('mouseenter',()=>c.classList.add('on'));
+    el.addEventListener('mouseleave',()=>c.classList.remove('on'));
+  });
+})();
+
+/* ---------- magnetic buttons ---------- */
+document.querySelectorAll('.mag').forEach(el=>{
+  el.addEventListener('mousemove',e=>{
+    const r=el.getBoundingClientRect();
+    el.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.25}px,${(e.clientY-r.top-r.height/2)*.35}px)`;
+  });
+  el.addEventListener('mouseleave',()=>el.style.transform='');
+});
+
+/* ---------- progress + nav ---------- */
+addEventListener('scroll',()=>{
+  const p=scrollY/(document.body.scrollHeight-innerHeight);
+  document.getElementById('prog').style.transform=`scaleX(${p})`;
+  document.getElementById('nav').classList.toggle('stuck',scrollY>40);
+},{passive:true});
+
+/* ---------- reveal ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');}}),{threshold:.16});
+const obsAll=()=>document.querySelectorAll('[data-rv]:not(.in),.tl-i:not(.in)').forEach(el=>io.observe(el));
+
+/* ---------- counters ---------- */
+new IntersectionObserver((es,ob)=>es.forEach(e=>{
+  if(!e.isIntersecting)return; ob.unobserve(e.target);
+  e.target.querySelectorAll('[data-count]').forEach(n=>{
+    const to=+n.dataset.count,sfx=n.dataset.suffix||'';let t0=null;
+    const step=ts=>{t0=t0||ts;const k=Math.min((ts-t0)/1300,1),e2=1-Math.pow(1-k,3);
+      n.textContent=Math.round(to*e2)+sfx; if(k<1)requestAnimationFrame(step);};
+    requestAnimationFrame(step);
+  });
+}),{threshold:.4}).observe(document.querySelector('.stats'));
+
+/* ---------- marquee ---------- */
+{
+  const items=['Agent Orchestration','LLM Platform Engineering','Distributed Systems','Evaluation & Guardrails','RAG at Scale','Team Leadership','Model Routing','Inference Cost Optimisation'];
+  document.getElementById('mqt').innerHTML=[...items,...items].map(i=>`<span>${i}</span>`).join('');
+}
+
+/* ---------- HERO GRAPH ---------- */
+(()=>{
+  const cv=document.getElementById('graph'),ctx=cv.getContext('2d');
+  let W,H,DPR;
+  const layout=[
+    {id:'in', x:.08,y:.50,l:'INGRESS'},
+    {id:'pl', x:.26,y:.50,l:'PLANNER'},
+    {id:'w1', x:.50,y:.22,l:'RETRIEVER'},
+    {id:'w2', x:.50,y:.50,l:'CODER'},
+    {id:'w3', x:.50,y:.78,l:'ANALYST'},
+    {id:'tl', x:.50,y:.96,l:'TOOLS'},
+    {id:'cr', x:.74,y:.50,l:'CRITIC'},
+    {id:'ou', x:.93,y:.50,l:'OUTPUT'},
+    {id:'mm', x:.26,y:.16,l:'MEMORY'}
+  ];
+  const edges=[['in','pl'],['pl','w1'],['pl','w2'],['pl','w3'],['w1','cr'],['w2','cr'],['w3','cr'],
+               ['cr','ou'],['cr','pl'],['w3','tl'],['w2','tl'],['pl','mm'],['mm','w1']];
+  let N=[],E=[],pk=[],mouse={x:-999,y:-999},t=0;
+
+  function size(){
+    DPR=Math.min(devicePixelRatio||1,2);
+    W=cv.clientWidth;H=cv.clientHeight;
+    cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);
+    N=layout.map((n,i)=>({...n,bx:n.x*W,by:n.y*H,ox:0,oy:0,ph:i*1.3,pulse:0}));
+    E=edges.map(([a,b])=>({a:N.findIndex(n=>n.id===a),b:N.findIndex(n=>n.id===b)}));
+  }
+  size(); addEventListener('resize',size);
+  addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;});
+
+  function spawn(){
+    const e=E[Math.floor(Math.random()*E.length)];
+    pk.push({e,t:0,sp:.006+Math.random()*.006,c:Math.random()>.72?'#6EE7FF':'#5BFFA5'});
+    if(pk.length>46)pk.shift();
+  }
+  let acc=0;
+
+  function draw(){
+    t+=.01; ctx.clearRect(0,0,W,H);
+    N.forEach(n=>{
+      n.ox=Math.sin(t*.8+n.ph)*9; n.oy=Math.cos(t*.62+n.ph)*7;
+      const dx=(n.bx+n.ox)-mouse.x, dy=(n.by+n.oy)-mouse.y, d=Math.hypot(dx,dy);
+      if(d<170){const f=(170-d)/170*26; n.ox+=dx/d*f; n.oy+=dy/d*f;}
+      n.px=n.bx+n.ox; n.py=n.by+n.oy; n.pulse*=.94;
+    });
+    // edges
+    E.forEach(e=>{
+      const a=N[e.a],b=N[e.b];
+      ctx.beginPath();ctx.moveTo(a.px,a.py);
+      const mx=(a.px+b.px)/2,my=(a.py+b.py)/2-Math.abs(b.px-a.px)*.10;
+      ctx.quadraticCurveTo(mx,my,b.px,b.py);
+      ctx.strokeStyle='rgba(255,255,255,.075)';ctx.lineWidth=1;ctx.stroke();
+      e.mx=mx;e.my=my;
+    });
+    // packets
+    if(!RM){acc++; if(acc%14===0)spawn();}
+    pk.forEach(p=>{
+      p.t+=p.sp; const a=N[p.e.a],b=N[p.e.b],k=p.t;
+      if(k>=1){p.dead=true;b.pulse=1;return}
+      const u=1-k;
+      const x=u*u*a.px+2*u*k*p.e.mx+k*k*b.px, y=u*u*a.py+2*u*k*p.e.my+k*k*b.py;
+      ctx.beginPath();ctx.arc(x,y,2.4,0,7);ctx.fillStyle=p.c;
+      ctx.shadowColor=p.c;ctx.shadowBlur=12;ctx.fill();ctx.shadowBlur=0;
+    });
+    pk=pk.filter(p=>!p.dead);
+    // nodes
+    N.forEach(n=>{
+      const r=6+n.pulse*7;
+      ctx.beginPath();ctx.arc(n.px,n.py,r+11,0,7);
+      ctx.fillStyle=`rgba(91,255,165,${.05+n.pulse*.13})`;ctx.fill();
+      ctx.beginPath();ctx.arc(n.px,n.py,r,0,7);
+      ctx.fillStyle='#0b0d11';ctx.fill();
+      ctx.strokeStyle=n.pulse>.15?'#5BFFA5':'rgba(255,255,255,.3)';ctx.lineWidth=1.2;ctx.stroke();
+      ctx.font='9px "JetBrains Mono",monospace';ctx.fillStyle='rgba(255,255,255,.34)';
+      ctx.textAlign='center';ctx.fillText(n.l,n.px,n.py-16);
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ---------- orchestration svg ---------- */
+(()=>{
+  const nodes=[
+    {id:'req',x:22,y:165,w:96,h:52,t:'REQUEST',s:'ingress',
+      d:'Every request is normalised, budgeted and traced before a single token is spent. Cost ceilings and deadlines are attached here, not later.',
+      l:['Schema + intent validation','Per-request token budget','Trace ID propagation']},
+    {id:'plan',x:168,y:165,w:112,h:52,t:'PLANNER',s:'reasoning',
+      d:'Decomposes an ambiguous request into a typed DAG of sub-tasks, picks the cheapest capable model per node, and re-plans when the critic rejects a branch.',
+      l:['Typed task DAG','Per-node model routing','Replan on critic reject']},
+    {id:'w1',x:336,y:58,w:118,h:46,t:'RETRIEVER',s:'worker',
+      d:'Hybrid retrieval — BM25 + dense + a rerank pass — over a corpus that updates continuously. Returns citations, never raw text alone.',
+      l:['Hybrid BM25 + dense','Cross-encoder rerank','Citation-first output']},
+    {id:'w2',x:336,y:165,w:118,h:46,t:'EXECUTOR',s:'worker',
+      d:'Runs the actual work in a sandbox: code, queries, API calls. Every side effect is reversible and every tool call is schema-validated.',
+      l:['Sandboxed execution','Schema-validated tools','Reversible side effects']},
+    {id:'w3',x:336,y:272,w:118,h:46,t:'ANALYST',s:'worker',
+      d:'Synthesises worker output into an answer, and is the only component allowed to speak to the user in prose.',
+      l:['Cross-worker synthesis','Tone + format control','Refusal handling']},
+    {id:'crit',x:512,y:165,w:112,h:52,t:'CRITIC',s:'verify',
+      d:'An adversarial pass that tries to break the answer: unsupported claims, hallucinated citations, unmet constraints. Majority-refute kills the branch.',
+      l:['Adversarial verification','Groundedness scoring','Loops back to planner']},
+    {id:'mem',x:168,y:58,w:112,h:46,t:'MEMORY',s:'state',
+      d:'Episodic + semantic memory with explicit TTLs. Nothing enters long-term memory without passing a write-gate.',
+      l:['Episodic + semantic split','Write-gated promotion','Explicit TTL / decay']},
+    {id:'tool',x:336,y:328,w:118,h:38,t:'TOOL LAYER',s:'io',
+      d:'200+ registered tools behind one contract: typed args, idempotency keys, rate budgets, and per-tenant permissions.',
+      l:['Typed tool contract','Idempotency keys','Per-tenant permissions']},
+    {id:'out',x:664,y:165,w:74,h:52,t:'RESULT',s:'egress',
+      d:'Streamed to the client with the full trace attached — which agent said what, which tool ran, what it cost.',
+      l:['Token streaming','Attached trace + cost','Structured or prose']}
+  ];
+  const eds=[['req','plan'],['plan','w1'],['plan','w2'],['plan','w3'],['w1','crit'],['w2','crit'],['w3','crit'],
+             ['crit','out'],['plan','mem'],['w2','tool'],['w3','tool']];
+  const svg=document.getElementById('osvg'), gE=svg.querySelector('.ed-wrap'), gN=document.getElementById('onodes');
+  const byId=Object.fromEntries(nodes.map(n=>[n.id,n]));
+  const P=n=>({l:n.x,r:n.x+n.w,cx:n.x+n.w/2,cy:n.y+n.h/2,t:n.y,b:n.y+n.h});
+  eds.forEach(([a,b],i)=>{
+    const A=P(byId[a]),B=P(byId[b]);
+    const x1=B.cx>A.cx?A.r:A.cx, y1=B.cx>A.cx?A.cy:(B.cy>A.cy?A.b:A.t);
+    const x2=B.cx>A.cx?B.l:B.cx, y2=B.cx>A.cx?B.cy:(B.cy>A.cy?B.t:B.b);
+    const d=`M${x1},${y1} C${(x1+x2)/2},${y1} ${(x1+x2)/2},${y2} ${x2},${y2}`;
+    gE.insertAdjacentHTML('beforeend',`<path class="ed" d="${d}"/><path class="ed-f" d="${d}" style="animation-delay:${(i*.29).toFixed(2)}s"/>`);
+  });
+  nodes.forEach(n=>{
+    gN.insertAdjacentHTML('beforeend',`<g class="n-box" data-id="${n.id}">
+      <rect class="n-rect" x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="8"/>
+      <text class="n-t" x="${n.x+n.w/2}" y="${n.y+n.h/2+(n.h>40?-1:4)}" text-anchor="middle">${n.t}</text>
+      ${n.h>40?`<text class="n-s" x="${n.x+n.w/2}" y="${n.y+n.h/2+13}" text-anchor="middle">${n.s.toUpperCase()}</text>`:''}
+    </g>`);
+  });
+  const T=document.getElementById('oi-t'),D=document.getElementById('oi-p'),L=document.getElementById('oi-l');
+  function show(n){
+    document.querySelectorAll('.n-box').forEach(g=>g.classList.toggle('act',g.dataset.id===n.id));
+    T.textContent=n.t; D.textContent=n.d; L.innerHTML=n.l.map(x=>`<li>${x}</li>`).join('');
+  }
+  gN.querySelectorAll('.n-box').forEach(g=>g.addEventListener('click',()=>show(byId[g.dataset.id])));
+  show(byId.plan);
+
+  /* live log */
+  const lines=[
+    ['plan','decomposed request → <u>4</u> sub-tasks'],
+    ['route','executor → <u>haiku-4.5</u> (cost tier 1)'],
+    ['tool','sql.query ok <u>84ms</u>'],
+    ['retr','hybrid recall <u>0.91</u> · reranked 24→6'],
+    ['crit','groundedness <u>0.96</u> · accepted'],
+    ['plan','branch 3 rejected → replanning'],
+    ['tool','http.fetch ok <u>212ms</u>'],
+    ['out','streamed <u>1,284</u> tokens · $0.0031'],
+    ['mem','promoted 2 facts to semantic store']
+  ];
+  const box=document.getElementById('log'); let li=0;
+  setInterval(()=>{
+    const [a,b]=lines[li++%lines.length];
+    const d=document.createElement('div');
+    d.innerHTML=`<b>[${String(li).padStart(4,'0')}]</b> ${a.padEnd(5,' ')} · ${b}`;
+    box.appendChild(d); if(box.children.length>6)box.firstChild.remove();
+  },1300);
+})();
+
+/* ---------- timeline ---------- */
+{
+  const items=[
+    {y:'2023 — Now',r:'Co-Founder & Head of Engineering',c:'[Stealth AI Venture]',
+     p:'Founded and built the engineering org around an agent-orchestration platform. Owned architecture, hiring, and the uncomfortable trade-offs between velocity and correctness. Took the runtime from a notebook to multi-tenant production.',
+     t:['Agent runtime','Multi-tenant','0→1','Hiring']},
+    {y:'2021 — 2023',r:'Staff Software Engineer',c:'[Company]',
+     p:'Technical owner of the ML platform serving every product team. Cut inference spend by 40% with model routing and semantic caching, and introduced the eval harness that made LLM changes shippable without vibes.',
+     t:['ML platform','Model routing','Evals','−40% cost']},
+    {y:'2019 — 2021',r:'Senior AI Engineer / Tech Lead',c:'[Company]',
+     p:'Led a team of six building production retrieval and ranking. Replaced a brittle keyword pipeline with a hybrid system and a rerank stage; owned the on-call story for it too.',
+     t:['RAG','Ranking','Team of 6']},
+    {y:'2017 — 2019',r:'Software Engineer',c:'[Company]',
+     p:'Distributed backend work — event pipelines, idempotent workers, the unglamorous reliability engineering that everything else stands on.',
+     t:['Distributed systems','Kafka','Reliability']},
+    {y:'2015 — 2017',r:'Software Engineer',c:'[Company]',
+     p:'Full-stack product engineering across web and services. Where I learned that shipping is a skill separate from building.',
+     t:['Full-stack','Product']}
+  ];
+  const tl=document.getElementById('tl');
+  tl.insertAdjacentHTML('beforeend',items.map(i=>`
+    <div class="tl-i" data-rv>
+      <div class="tl-top"><span class="tl-yr">${i.y}</span><h3>${i.r}</h3><span class="tl-co">${i.c}</span></div>
+      <p>${i.p}</p><div class="tags">${i.t.map(x=>`<span class="tag">${x}</span>`).join('')}</div>
+    </div>`).join(''));
+  addEventListener('scroll',()=>{
+    const r=tl.getBoundingClientRect(), h=tl.offsetHeight;
+    const p=Math.max(0,Math.min(1,(innerHeight*.65-r.top)/h));
+    document.getElementById('tlf').style.height=(p*h)+'px';
+  },{passive:true});
+}
+
+/* ---------- work ---------- */
+{
+  const w=[
+    {n:'01',t:'Agent Orchestration Runtime',p:'Planner–worker–critic loop with a typed task DAG, per-node model routing and replay. The system this whole site is really about.',k:'TypeScript · Python · Temporal'},
+    {n:'02',t:'Realtime Retrieval Platform',p:'Hybrid BM25 + dense retrieval with a cross-encoder rerank, holding p95 under 200ms over a continuously-updating corpus.',k:'Rust · pgvector · Redis'},
+    {n:'03',t:'LLM Evaluation Harness',p:'Judge panels, golden sets and regression gates wired into CI, so a prompt change fails the build instead of production.',k:'Python · Ray · GitHub Actions'},
+    {n:'04',t:'Inference Cost Gateway',p:'Multi-tenant routing with semantic caching, budget enforcement and per-team chargeback. Cut spend 40% with no quality regression.',k:'Go · Envoy · ClickHouse'},
+    {n:'05',t:'Developer Copilot',p:'An IDE agent with repo-wide context, sandboxed execution and a refusal-to-guess policy that engineers actually trusted.',k:'TypeScript · LSP · MCP'},
+    {n:'06',t:'MyMentorSquare',p:'Earlier venture — a matching platform connecting mentors and mentees. Where I first learned what founding actually costs.',k:'Node · React · Postgres'}
+  ];
+  document.getElementById('workg').innerHTML=w.map((c,i)=>`
+    <a class="card" data-rv style="transition-delay:${i*.06}s" href="#">
+      <div><div class="card-n">${c.n} / CASE STUDY</div><h3>${c.t}</h3><p>${c.p}</p></div>
+      <div class="card-f"><span class="card-n">${c.k}</span><span class="card-ar">↗</span></div>
+    </a>`).join('');
+  document.querySelectorAll('.card').forEach(c=>c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect();
+    c.style.setProperty('--mx',(e.clientX-r.left)+'px');
+    c.style.setProperty('--my',(e.clientY-r.top)+'px');
+  }));
+  document.getElementById('stk').innerHTML=['Python','TypeScript','Go','Rust','PyTorch','LangGraph','MCP','Temporal','Kubernetes','Terraform','Postgres','pgvector','Kafka','Ray','ClickHouse','AWS','GCP','OpenTelemetry'].map(s=>`<span>${s}</span>`).join('');
+}
+
+obsAll();
+</script>
+</body>
+</html>
