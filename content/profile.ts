@@ -36,9 +36,9 @@ export const profile = {
 
 export const stats = [
   { value: 10, suffix: "+", label: "Years shipping production software" },
-  { value: 97, suffix: "%", label: "Test coverage established at PayPal" },
+  { value: 15, suffix: "K+", label: "Small businesses served by the platform" },
   { value: 40, prefix: "~", suffix: "%", label: "Duplicated UI code eliminated" },
-  { value: 30, prefix: "~", suffix: "%", label: "CI build time cut via Vite migration" },
+  { value: 97, suffix: "%", label: "Test coverage established at PayPal" },
 ] as const;
 
 export const marquee = [

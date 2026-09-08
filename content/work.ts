@@ -13,7 +13,7 @@ export const work: Project[] = [
     kicker: "01 / AI PLATFORM",
     title: "Agent Orchestration Service",
     blurb:
-      "A multi-tenant Python API where internal product teams register, configure and run their own LLM agents — replacing the per-team one-off integrations that came before it across a CRM and marketing-automation platform.",
+      "A multi-tenant Python API where internal product teams register, configure and run their own LLM agents — replacing the per-team one-off integrations that came before it across a CRM and marketing-automation platform serving 15,000+ small businesses.",
     stack: "Python · Multi-tenant API · LLM providers",
     at: "Current role",
   },

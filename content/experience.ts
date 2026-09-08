@@ -18,7 +18,7 @@ export const experience: Role[] = [
     note: "company named on request",
     location: "Phoenix, AZ",
     bullets: [
-      "Architected and shipped a Python agent orchestration service — a multi-tenant API where internal product teams register, configure and run their own LLM agents — replacing per-team one-off integrations across a CRM and marketing-automation platform used by small businesses.",
+      "Architected and shipped a Python agent orchestration service — a multi-tenant API where internal product teams register, configure and run their own LLM agents — replacing per-team one-off integrations across a CRM and marketing-automation platform serving 15,000+ small businesses.",
       "Built Model Context Protocol (MCP) tool servers giving agents access to product data and internal APIs, cutting new AI integration effort from weeks to days.",
       "Designed a memory RAG pipeline on a vector database that grounds agent responses in company data, and delivered the in-product AI chat experience end to end — streaming responses, conversation state, retry and fallback handling — in Vue 3 and React.",
       "Own front-end architecture platform-wide: drove the Webpack-to-Vite migration and a shared Vue and React component library that cut CI build times ~30% and removed ~40% of duplicated UI code.",
@@ -35,7 +35,7 @@ export const experience: Role[] = [
     bullets: [
       "Built and shipped a React and TypeScript eligibility platform determining member qualification for USAA banking and insurance products, serving a member base in the millions.",
       "Implemented route-level code splitting with React Router, reducing initial bundle size 15% and improving first contentful paint.",
-      "Architected Redux state management for a multi-step SPA and a reusable component system in JSX and SCSS, standardising data flow across feature teams and eliminating a recurring class of state-sync defects.",
+      "Architected Redux state management for a multi-step SPA and a reusable component system in JSX and SCSS, standardising data flow across 3+ feature teams and eliminating a recurring class of state-sync defects.",
       "Partnered with backend engineers on REST contract design and deployed through GitLab CI to AWS with Docker and Kubernetes in two-week Agile sprints.",
     ],
     tags: ["React", "TypeScript", "Redux", "Kubernetes", "AWS", "GitLab CI"],
@@ -69,9 +69,11 @@ export const experience: Role[] = [
     start: "2014",
     title: "Front End Developer",
     company: "Paramount Tech Solutions & Services Pvt. Ltd",
+    note: "intern → part-time → full-time",
     location: "India",
     bullets: [
-      "Delivered client-facing web applications in Angular, React, JavaScript, HTML5 and CSS3 for enterprise clients, improving page render performance.",
+      "Joined as an intern while completing my B.Tech, moved to part-time through my degree, then full-time after graduating — the four years where I learned to ship.",
+      "Delivered client-facing web applications in Angular, React, JavaScript, HTML5 and CSS3 for 50+ enterprise clients, improving page render performance.",
       "Authored the database queries, stored procedures and triggers behind those screens.",
     ],
     tags: ["Angular", "React", "JavaScript", "SQL"],

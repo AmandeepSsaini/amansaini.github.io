@@ -64,7 +64,7 @@ export function Counter({
     return () => cancelAnimationFrame(raf);
   }, [inView, to]);
 
-  return <span ref={ref}>{prefix}{n}{suffix}</span>;
+  return <span ref={ref}>{prefix}{n.toLocaleString("en-US")}{suffix}</span>;
 }
 
 /* Section heading with the scramble-on-hover effect. */
