@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { profile } from "@/content/profile";
+import { SITE_URL } from "@/content/site";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -23,7 +24,7 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
-const SITE = "https://amansaini.github.io";
+const SITE = SITE_URL;
 const description =
   "Amandeep Singh Saini — Tech Lead and Senior AI Engineer in Phoenix, AZ. 10+ years building full-stack platforms; now shipping LLM agent orchestration, MCP tool servers and RAG pipelines.";
 

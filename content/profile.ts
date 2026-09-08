@@ -1,3 +1,5 @@
+import { asset } from "./site";
+
 export const profile = {
   name: "Amandeep Singh Saini",
   short: "Aman Saini",
@@ -10,7 +12,7 @@ export const profile = {
   email: "amandeepsingh.saini3174@gmail.com",
   linkedin: "https://www.linkedin.com/in/amandeepsingh-saini/",
   github: "https://github.com/AmandeepSsaini",
-  resume: "/Amandeep_Singh_Saini_Resume.docx",
+  resume: asset("/Amandeep_Singh_Saini_Resume.docx"),
   available: "Open to Senior / Staff & AI engineering roles",
 
   headline: ["I ORCHESTRATE", "INTELLIGENT", "AGENTS."],
