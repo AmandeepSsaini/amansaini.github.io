@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://amandeepssaini.github.io/amansaini.github.io/sitemap.xml
+Sitemap: https://amansaini.dev/sitemap.xml
