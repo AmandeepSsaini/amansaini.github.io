@@ -5,10 +5,11 @@ import { motion, useScroll, useSpring } from "motion/react";
 import { profile } from "@/content/profile";
 
 const LINKS = [
-  ["#about", "01 / About"],
-  ["#architecture", "02 / AI Systems"],
-  ["#experience", "03 / Experience"],
-  ["#work", "04 / Work"],
+  ["/#about", "01 / About"],
+  ["/#architecture", "02 / AI Systems"],
+  ["/#experience", "03 / Experience"],
+  ["/#work", "04 / Work"],
+  ["/articles/", "05 / Writing"],
 ];
 
 export function useTheme() {
@@ -101,7 +102,7 @@ export function Nav() {
   return (
     <nav className={`nav${stuck ? " stuck" : ""}`}>
       <div className="nav-in">
-        <a className="brand" href="#top"><i />{profile.name}</a>
+        <a className="brand" href="/"><i />{profile.name}</a>
         <div className="nav-l">
           {LINKS.map(([href, label]) => (<a key={href} href={href}>{label}</a>))}
         </div>
@@ -110,7 +111,7 @@ export function Nav() {
           <button className="tgl" onClick={toggle} aria-label="Toggle colour theme">
             <i className="m">☾</i><i className="s">☀</i><b />
           </button>
-          <a className="nav-cta" href="#contact">Hire me</a>
+          <a className="nav-cta" href="/#contact">Hire me</a>
         </div>
       </div>
     </nav>

@@ -3,6 +3,7 @@ import { Hero } from "@/components/Hero";
 import { Architecture } from "@/components/Architecture";
 import { WorkGrid } from "@/components/WorkGrid";
 import { Chapter, Counter, Reveal } from "@/components/Motion";
+import { Footer } from "@/components/Footer";
 import { profile, stats, marquee } from "@/content/profile";
 import { experience, education, certifications } from "@/content/experience";
 import { skillGroups } from "@/content/skills";
@@ -177,13 +178,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer>
-        <div className="wrap f-in">
-          <span>© {new Date().getFullYear()} {profile.name}</span>
-          <span>{profile.locationShort} · {profile.role}</span>
-          <span><a href="#top">Back to top ↑</a></span>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }
