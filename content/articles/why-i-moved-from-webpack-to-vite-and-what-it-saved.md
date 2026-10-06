@@ -42,7 +42,10 @@ export default defineConfig({
 Move `index.html` out of `public/` and into the root. Vite treats it as the entry point. Then point it at your main file:
 
 ```html
-
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
 ```
 
 Update your scripts in `package.json`:
