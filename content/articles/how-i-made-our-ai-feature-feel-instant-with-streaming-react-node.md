@@ -1,6 +1,6 @@
 ---
 title: How I Made Our AI Feature Feel Instant with Streaming (React + Node).
-date: 2026-10-26T12:52:00
+date: 2026-10-26T13:07:00
 description: Our AI feature felt slow, but the model wasn't the problem. Here's how I used streaming in React and Node to show answers word by word, almost instantly.
 tags:
   - React
