@@ -8,7 +8,7 @@ tags:
   - Node js
   - Web performance
 cover: /images/articles/15451.png
-draft: true
+draft: false
 ---
 
 We added an AI assistant to our app. It gave good answers, but people kept saying it was slow. The funny part? The model wasn't actually that slow. The problem was how we showed the answer.
