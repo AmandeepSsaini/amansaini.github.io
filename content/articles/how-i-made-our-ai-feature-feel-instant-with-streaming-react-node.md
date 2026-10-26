@@ -21,7 +21,7 @@ The fix was **streaming**: show the answer word by word as the model writes it, 
 
 There are three pieces: the React app, a small Node server in the middle, and the AI model.
 
-![The prompt goes out once; the answer comes back in small chunks](streaming-diagram.png)
+![The prompt goes out once; the answer comes back in small chunks](/images/articles/15452.png)
 
 The browser sends the question once. The server passes it to the model. Then, instead of waiting for the full reply, the model sends back tiny pieces of text as it writes them. The server forwards each piece straight to the browser, and React adds it to the screen.
 
@@ -150,7 +150,7 @@ Now the UI updates at most about 60 times a second, no matter how fast the chunk
 
 **2. Add a Stop button.** Long answers sometimes go the wrong way. A Stop button that calls `stop()` aborts the fetch, and the server's `req.on("close")` stops the model too. Users love having control, and it cuts wasted tokens.
 
-**3. Auto-scroll, but politely.** Scroll to the bottom as new text arrives — *unless* the user has scrolled up to reread something. Nothing is more annoying than being yanked back down while you're reading:
+**3. Auto-scroll, but politely.** Scroll to the bottom as new text arrives — _unless_ the user has scrolled up to reread something. Nothing is more annoying than being yanked back down while you're reading:
 
 ```jsx
 useEffect(() => {
@@ -162,19 +162,6 @@ useEffect(() => {
 
 One more small thing: I added `aria-live="polite"` on the answer container so screen readers announce the reply without interrupting the user.
 
-## The results
-
-The total time to get a full answer barely changed. What changed was how long people waited before seeing *anything*.
-
-| What I measured | Before | After |
-| --- | --- | --- |
-| Time until first words appear | [X] s | [X] ms |
-| Time until full answer | [X] s | [X] s (about the same) |
-| Users clicking "send" twice | [X]% | [X]% |
-| Re-renders per answer | One per chunk | ~60 per second max |
-
-And the feedback flipped. Instead of "the AI is slow," people started saying it felt fast.
-
 ## What I learned
 
 1. **Perceived speed matters more than actual speed.** Showing progress early beats finishing a little faster.
@@ -185,4 +172,4 @@ And the feedback flipped. Instead of "the AI is slow," people started saying it 
 
 AI features are quickly becoming a normal part of frontend work. The model gives you the answer, but the frontend decides whether it feels like magic or like waiting.
 
-*Building something with AI in your frontend? I'd love to hear what you're working on. Drop a comment or message me on LinkedIn.*
+_Building something with AI in your frontend? I'd love to hear what you're working on. Drop a comment or message me on LinkedIn._
